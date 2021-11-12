@@ -19,6 +19,7 @@ spec:
         image: craksdemo.azurecr.io/tripviewer:1.0
         ports:
         - containerPort: 80
+          name: http
 ---
 apiVersion: v1
 kind: Service
