@@ -14,9 +14,20 @@ spec:
       labels:
         app: tripviewer
     spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
       containers:
       - name: tripviewer
         image: craksdemo.azurecr.io/tripviewer:1.0
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        env:
+        - name: TRIPS_API_ENDPOINT
+          value: "http://trips"
+        - name: USERPROFILE_API_ENDPOINT
+          value: "http://userprofile"
         ports:
         - containerPort: 80
           name: http
@@ -30,4 +41,4 @@ spec:
   ports:
   - port: 80
   selector:
-    app: tripsviewer
+    app: tripviewer

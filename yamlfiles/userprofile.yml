@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userprofile-deployment
+  labels:
+    app: userprofile
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userprofile
+  template:
+    metadata:
+      labels:
+        app: userprofile
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: userprofile
+        image: craksdemo.azurecr.io/userprofile:1.0
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "1"
+        ports:
+        - containerPort: 80
+          name: http
+        volumeMounts:
+        - name: secrets-store01
+          mountPath: /secrets
+          readOnly: true
+      volumes:
+        - name: secrets-store01
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: "azure-kv-aks-demo"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userprofile-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+  selector:
+    app: userprofile
