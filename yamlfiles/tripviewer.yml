@@ -25,9 +25,9 @@ spec:
             cpu: "1"
         env:
         - name: TRIPS_API_ENDPOINT
-          value: "http://trips"
+          value: "http://trips-service"
         - name: USERPROFILE_API_ENDPOINT
-          value: "http://userprofile"
+          value: "http://userprofile-service"
         ports:
         - containerPort: 80
           name: http

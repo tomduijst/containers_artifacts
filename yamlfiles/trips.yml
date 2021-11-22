@@ -30,6 +30,22 @@ spec:
         - name: secrets-store01
           mountPath: /secrets
           readOnly: true
+        env:
+        - name: SQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: sqlconnection
+              key: username
+        - name: SQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sqlconnection
+              key: password
+        - name: SQL_SERVER
+          valueFrom:
+            secretKeyRef:
+              name: sqlconnection
+              key: sqlserver
       volumes:
         - name: secrets-store01
           csi:
