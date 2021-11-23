@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userprofile-deployment
+  name: poi-deployment
   labels:
-    app: userprofile
+    app: poi
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: userprofile
+      app: poi
   template:
     metadata:
       labels:
-        app: userprofile
+        app: poi
     spec:
       nodeSelector:
         "kubernetes.io/os": linux
       containers:
-      - name: userprofile
-        image: craksdemo.azurecr.io/userprofile:1.0
+      - name: poi
+        image: craksdemo.azurecr.io/poi:1.0
         resources:
           limits:
             memory: "512Mi"
@@ -57,10 +57,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: userprofile-service
+  name: poi-service
 spec:
   type: ClusterIP
   ports:
   - port: 80
   selector:
-    app: userprofile
+    app: poi

@@ -22,7 +22,7 @@ spec:
         resources:
           limits:
             memory: "512Mi"
-            cpu: "1"
+            cpu: ".5"
         env:
         - name: TRIPS_API_ENDPOINT
           value: "http://trips-service"
@@ -37,8 +37,54 @@ kind: Service
 metadata:
   name: tripviewer-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80
   selector:
     app: tripviewer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tripviewer-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: tripviewer-service
+            port:
+              number: 80
+      - path: /api/user/*
+        pathType: Prefix
+        backend:
+          service:
+            name: userprofile-service
+            port:
+              number: 80
+      - path: /api/user-java/*
+        pathType: Prefix
+        backend:
+          service:
+            name: userjava-service
+            port:
+              number: 80
+      - path: /api/trips/*
+        pathType: Prefix
+        backend:
+          service:
+            name: trips-service
+            port:
+              number: 80
+      - path: /api/poi/*
+        pathType: Prefix
+        backend:
+          service:
+            name: poi-service
+            port:
+              number: 80

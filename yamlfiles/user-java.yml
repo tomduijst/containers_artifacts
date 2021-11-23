@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userprofile-deployment
+  name: user-java-deployment
   labels:
-    app: userprofile
+    app: user-java
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: userprofile
+      app: user-java
   template:
     metadata:
       labels:
-        app: userprofile
+        app: user-java
     spec:
       nodeSelector:
         "kubernetes.io/os": linux
       containers:
-      - name: userprofile
-        image: craksdemo.azurecr.io/userprofile:1.0
+      - name: userjava
+        image: craksdemo.azurecr.io/user-java:1.0
         resources:
           limits:
             memory: "512Mi"
@@ -26,6 +26,12 @@ spec:
         ports:
         - containerPort: 80
           name: http
+        readinessProbe:
+          httpGet:
+            path: /api/user-java/healthcheck
+            port: 80
+          periodSeconds: 30
+          timeoutSeconds: 30
         volumeMounts:
         - name: secrets-store01
           mountPath: /secrets
@@ -57,10 +63,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: userprofile-service
+  name: userjava-service
 spec:
   type: ClusterIP
   ports:
   - port: 80
   selector:
-    app: userprofile
+    app: user-java
