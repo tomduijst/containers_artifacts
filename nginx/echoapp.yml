@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echoapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echoapp
+  template:
+    metadata:
+      labels:
+        app: echoapp
+    spec:
+      containers:
+      - name: echoapp
+        image: gcr.io/kubernetes-e2e-test-images/echoserver:2.1
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: echoapp-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: echoapp
